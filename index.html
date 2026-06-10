@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-theme="light" data-lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hypatia — IA de Mentoria de Estudos</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" type="image/jpeg" href="logo.jpeg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <!-- ===== XP TOAST ===== -->
+  <div class="xp-toast hidden" id="xp-toast">
+    <span class="xp-toast-icon">⚡</span>
+    <span class="xp-toast-text" id="xp-toast-text">+25 XP</span>
+  </div>
+
+  <!-- ===== ONBOARDING MODAL ===== -->
+  <div id="onboarding-overlay" class="overlay-backdrop">
+    <div class="onboarding-modal" role="dialog" aria-modal="true" aria-labelledby="onboarding-title">
+      <div class="onboarding-logo">
+        <img src="logo.jpeg" alt="Hypatia Logo">
+      </div>
+      <h1 id="onboarding-title" data-i18n="onboarding_title">Bem-vindo à Hypatia</h1>
+      <p data-i18n="onboarding_subtitle">Sua mentora de IA para estudos. Vamos personalizar sua experiência.</p>
+      <div class="form-group">
+        <label for="input-name" data-i18n="onboarding_name">Seu nome</label>
+        <input type="text" id="input-name" placeholder="Ex: Ana Silva" autocomplete="name">
+      </div>
+      <div class="form-group">
+        <label for="input-email" data-i18n="onboarding_email">Seu e-mail (opcional)</label>
+        <input type="email" id="input-email" placeholder="ana@email.com" autocomplete="email">
+      </div>
+      <button class="btn-primary btn-full" id="btn-onboarding-start" data-i18n="onboarding_cta">Começar agora →</button>
+    </div>
+  </div>
+
+  <!-- ===== APP WRAPPER ===== -->
+  <div id="app" class="app-wrapper hidden">
+    <!-- Sidebar Overlay (Mobile) -->
+    <div id="sidebar-overlay" class="sidebar-overlay hidden"></div>
+
+    <!-- ===== SIDEBAR (Desktop) ===== -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <div class="sidebar-logo">
+          <img src="logo.jpeg" alt="Hypatia" class="logo-img">
+          <span class="logo-text">Hypatia</span>
+        </div>
+        <button class="sidebar-collapse-btn" id="sidebar-collapse-btn" aria-label="Colapsar sidebar">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 19l-7-7 7-7M18 19l-7-7 7-7"></path></svg>
+        </button>
+      </div>
+
+      <nav class="sidebar-nav" role="navigation" aria-label="Menu principal">
+        <ul>
+          <li>
+            <button class="nav-item active" data-page="dashboard" aria-label="Dashboard">
+              <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"></rect><rect x="14" y="3" width="7" height="7" rx="1"></rect><rect x="3" y="14" width="7" height="7" rx="1"></rect><rect x="14" y="14" width="7" height="7" rx="1"></rect></svg></span>
+              <span class="nav-label" data-i18n="nav_dashboard">Dashboard</span>
+            </button>
+          </li>
+          <li>
+            <button class="nav-item" data-page="learn" aria-label="Aprender">
+              <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"></path><path d="M2 17l10 5 10-5"></path><path d="M2 12l10 5 10-5"></path></svg></span>
+              <span class="nav-label" data-i18n="nav_learn">Aprender</span>
+            </button>
+          </li>
+          <li>
+            <button class="nav-item" data-page="projects" aria-label="Projetos">
+              <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2h5l2 3h9a2 2 0 012 2z"></path></svg></span>
+              <span class="nav-label" data-i18n="nav_projects">Projetos</span>
+            </button>
+          </li>
+          <li>
+            <button class="nav-item" data-page="chat" aria-label="Chat com IA">
+              <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"></path></svg></span>
+              <span class="nav-label" data-i18n="nav_chat">Chat IA</span>
+              <span class="nav-badge">IA</span>
+            </button>
+          </li>
+          <li>
+            <button class="nav-item" data-page="hackathons" aria-label="Hackathons">
+              <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg></span>
+              <span class="nav-label" data-i18n="nav_hackathons">Hackathons</span>
+            </button>
+          </li>
+          <li>
+            <button class="nav-item" data-page="community" aria-label="Comunidade">
+              <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg></span>
+              <span class="nav-label" data-i18n="nav_community">Comunidade</span>
+            </button>
+          </li>
+        </ul>
+      </nav>
+
+      <!-- Sidebar User Progress Card -->
+      <div class="sidebar-progress-card" id="sidebar-progress-card">
+        <div class="spc-header">
+          <div class="spc-avatar" id="spc-avatar">?</div>
+          <div class="spc-info">
+            <span class="spc-name" id="spc-name">Usuário</span>
+            <span class="spc-level" id="spc-level">Nível 1</span>
+          </div>
+        </div>
+        <div class="spc-xp-row">
+          <span class="spc-xp-label">XP</span>
+          <span class="spc-xp-value" id="spc-xp">0 / 500</span>
+        </div>
+        <div class="spc-xp-bar">
+          <div class="spc-xp-fill" id="spc-xp-fill" style="width: 0%"></div>
+        </div>
+        <div class="spc-streak">
+          <span class="spc-streak-fire">🔥</span>
+          <span class="spc-streak-text" id="spc-streak-text">7 dias seguidos</span>
+        </div>
+        <div class="spc-stats-row">
+          <div class="spc-stat"><span class="spc-stat-val" id="spc-lessons">24</span><span class="spc-stat-lbl" data-i18n="stat_lessons">Aulas</span></div>
+          <div class="spc-stat"><span class="spc-stat-val" id="spc-projects-count">5</span><span class="spc-stat-lbl" data-i18n="nav_projects">Projetos</span></div>
+          <div class="spc-stat"><span class="spc-stat-val">3</span><span class="spc-stat-lbl">Hacks</span></div>
+        </div>
+        <button class="btn-continue-learning" id="btn-continue-learning" data-i18n="btn_continue">▶ Continuar Aprendendo</button>
+      </div>
+
+      <div class="sidebar-footer">
+        <button class="nav-item" data-page="settings" aria-label="Configurações">
+          <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"></path></svg></span>
+          <span class="nav-label" data-i18n="nav_settings">Configurações</span>
+        </button>
+        <button class="nav-item" data-page="support" aria-label="Suporte">
+          <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg></span>
+          <span class="nav-label" data-i18n="nav_support">Suporte</span>
+        </button>
+      </div>
+    </aside>
+
+    <!-- ===== MAIN CONTENT ===== -->
+    <div class="main-container">
+
+      <!-- ===== HEADER ===== -->
+      <header class="app-header">
+        <div class="header-left">
+          <button class="mobile-menu-btn" id="mobile-menu-btn" aria-label="Menu">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+          </button>
+          <h2 class="page-title" id="page-title" data-i18n="nav_dashboard">Dashboard</h2>
+        </div>
+        <div class="header-right">
+          <button class="lang-toggle" id="lang-toggle" aria-label="Trocar idioma">
+            <span class="lang-flag" id="lang-flag">🇧🇷</span>
+            <span class="lang-text" id="lang-text">PT</span>
+          </button>
+          <button class="theme-toggle" id="theme-toggle" aria-label="Alternar tema">
+            <span class="theme-icon theme-icon-sun"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg></span>
+            <span class="theme-icon theme-icon-moon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path></svg></span>
+            <span class="toggle-track"><span class="toggle-thumb"></span></span>
+          </button>
+          <div class="user-menu" id="user-menu">
+            <div class="user-avatar" id="user-avatar" aria-label="Menu do usuário">
+              <span id="avatar-initials">?</span>
+            </div>
+            <div class="user-info">
+              <span class="user-name" id="header-user-name">Usuário</span>
+              <span class="user-role" data-i18n="user_role">Estudante</span>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <!-- ===== PAGES ===== -->
+      <main class="page-content" id="page-content">
+
+        <!-- ── DASHBOARD ── -->
+        <section class="page" id="page-dashboard" data-page="dashboard">
+          <div class="dashboard-welcome">
+            <div class="welcome-text">
+              <h1 data-i18n="dashboard_hello">Olá,</h1>
+              <h1 class="welcome-name" id="welcome-name">Estudante</h1>
+              <p data-i18n="dashboard_subtitle">Pronto para estudar hoje? Sua jornada de conhecimento continua.</p>
+            </div>
+            <div class="welcome-streak">
+              <div class="streak-badge">
+                <span class="streak-fire">🔥</span>
+                <div>
+                  <span class="streak-number">7</span>
+                  <span class="streak-label" data-i18n="streak_days">dias seguidos</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Stats Row -->
+          <div class="stats-row">
+            <div class="stat-card" style="animation-delay: 0s;">
+              <div class="stat-icon stat-icon-blue"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"></path><path d="M2 17l10 5 10-5"></path><path d="M2 12l10 5 10-5"></path></svg></div>
+              <div class="stat-info"><span class="stat-value" id="stat-lessons">24</span><span class="stat-label" data-i18n="stat_lessons">Aulas concluídas</span></div>
+            </div>
+            <div class="stat-card" style="animation-delay: 0.08s;">
+              <div class="stat-icon stat-icon-green"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg></div>
+              <div class="stat-info"><span class="stat-value">89%</span><span class="stat-label" data-i18n="stat_progress">Progresso geral</span></div>
+            </div>
+            <div class="stat-card" style="animation-delay: 0.16s;">
+              <div class="stat-icon stat-icon-purple"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2h5l2 3h9a2 2 0 012 2z"></path></svg></div>
+              <div class="stat-info"><span class="stat-value">5</span><span class="stat-label" data-i18n="stat_projects">Projetos ativos</span></div>
+            </div>
+            <div class="stat-card" style="animation-delay: 0.24s;">
+              <div class="stat-icon stat-icon-orange"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg></div>
+              <div class="stat-info"><span class="stat-value" id="stat-xp">1250</span><span class="stat-label">XP Total</span></div>
+            </div>
+          </div>
+
+          <!-- XP Progress Bar -->
+          <div class="xp-progress-section">
+            <div class="xp-level-row">
+              <div class="xp-level-badge" id="xp-level-badge">Nível 3</div>
+              <div class="xp-progress-info">
+                <span class="xp-current" id="xp-current-display">1250 XP</span>
+                <span class="xp-separator">/</span>
+                <span class="xp-next">1500 XP</span>
+              </div>
+              <div class="xp-next-level">Nível 4 →</div>
+            </div>
+            <div class="xp-bar-full">
+              <div class="xp-bar-fill" id="xp-bar-fill" style="width: 83%"></div>
+            </div>
+          </div>
+
+          <!-- Feature Cards Grid -->
+          <div class="cards-section">
+            <h3 class="section-title" data-i18n="section_explore">Explorar</h3>
+            <div class="feature-cards-grid">
+              <div class="feature-card card-learn" data-page-target="learn" tabindex="0" role="button">
+                <div class="card-glow"></div>
+                <div class="card-icon-wrap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"></path><path d="M2 17l10 5 10-5"></path><path d="M2 12l10 5 10-5"></path></svg></div>
+                <div class="card-content">
+                  <h4 data-i18n="card_learn_title">Aprender</h4>
+                  <p data-i18n="card_learn_desc">Trilhas de estudos personalizadas com IA adaptativa para seu nível.</p>
+                </div>
+              </div>
+              <div class="feature-card card-projects" data-page-target="projects" tabindex="0" role="button">
+                <div class="card-glow"></div>
+                <div class="card-icon-wrap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2h5l2 3h9a2 2 0 012 2z"></path></svg></div>
+                <div class="card-content">
+                  <h4 data-i18n="card_projects_title">Projetos</h4>
+                  <p data-i18n="card_projects_desc">Desenvolva projetos reais e multidisciplinares guiados pela Hypatia.</p>
+                </div>
+              </div>
+              <div class="feature-card card-chat" data-page-target="chat" tabindex="0" role="button">
+                <div class="card-glow"></div>
+                <div class="card-icon-wrap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"></path></svg></div>
+                <div class="card-content">
+                  <h4 data-i18n="card_chat_title">Chat com IA</h4>
+                  <p data-i18n="card_chat_desc">Tire suas dúvidas e receba mentoria educacional 24/7 com a Hypatia.</p>
+                </div>
+              </div>
+              <div class="feature-card card-hackathons" data-page-target="hackathons" tabindex="0" role="button">
+                <div class="card-glow"></div>
+                <div class="card-icon-wrap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg></div>
+                <div class="card-content">
+                  <h4 data-i18n="card_hackathons_title">Hackathons</h4>
+                  <p data-i18n="card_hackathons_desc">Participe de desafios escolares e acadêmicos para acelerar sua evolução.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ── APRENDER ── -->
+        <section class="page hidden" id="page-learn" data-page="learn">
+          <div class="page-header-inner">
+            <div>
+              <h2 data-i18n="nav_learn">Aprender</h2>
+              <p data-i18n="learn_subtitle">Trilhas de estudos completas para o Ensino Médio com IA adaptativa.</p>
+            </div>
+          </div>
+          <div class="filter-bar">
+            <button class="filter-btn active" data-filter="all" data-i18n="filter_all">Todos</button>
+            <button class="filter-btn" data-filter="exatas">Exatas</button>
+            <button class="filter-btn" data-filter="humanas">Humanas</button>
+            <button class="filter-btn" data-filter="biologicas">Biológicas</button>
+            <button class="filter-btn" data-filter="linguagens">Linguagens</button>
+          </div>
+          <div class="courses-grid" id="courses-grid">
+            <!-- Rendered by JS -->
+          </div>
+        </section>
+
+        <!-- ── PROJETOS ── -->
+        <section class="page hidden" id="page-projects" data-page="projects">
+          <div class="page-header-inner">
+            <div>
+              <h2 data-i18n="nav_projects">Projetos</h2>
+              <p data-i18n="projects_subtitle">Seus projetos reais com código, estrutura e preview.</p>
+            </div>
+            <button class="btn-primary" id="btn-new-project" data-i18n="btn_new_project">+ Novo Projeto</button>
+          </div>
+          <div class="projects-grid" id="projects-grid">
+            <!-- Rendered by JS -->
+          </div>
+        </section>
+
+        <!-- ── MODAL NOVO PROJETO ── -->
+        <div class="modal-overlay hidden" id="new-project-modal">
+          <div class="modal-card modal-project-form">
+            <div class="modal-header">
+              <h3 data-i18n="btn_new_project">Novo Projeto</h3>
+              <button class="modal-close" id="close-new-project-modal">✕</button>
+            </div>
+            <div class="modal-body">
+              <div class="form-row-2">
+                <div class="form-group"><label>Título do Projeto</label><input type="text" id="proj-title" placeholder="Ex: Robô de Reciclagem"></div>
+                <div class="form-group"><label>Categoria</label>
+                  <select id="proj-category" class="form-select">
+                    <option>Sustentabilidade</option><option>Educação</option><option>Tecnologia</option><option>Saúde</option><option>Social</option>
+                  </select>
+                </div>
+              </div>
+              <div class="form-group"><label>Objetivo</label><input type="text" id="proj-objective" placeholder="O que esse projeto resolve?"></div>
+              <div class="form-group"><label>Descrição</label><textarea id="proj-description" rows="3" placeholder="Descreva o projeto..."></textarea></div>
+              <div class="form-group">
+                <label>Áreas Relacionadas</label>
+                <div class="tags-selector" id="tags-selector">
+                  <span class="tag-option" data-tag="Matemática">Matemática</span>
+                  <span class="tag-option" data-tag="Física">Física</span>
+                  <span class="tag-option" data-tag="Biologia">Biologia</span>
+                  <span class="tag-option" data-tag="Química">Química</span>
+                  <span class="tag-option" data-tag="Programação">Programação</span>
+                  <span class="tag-option" data-tag="Robótica">Robótica</span>
+                  <span class="tag-option" data-tag="Redação">Redação</span>
+                  <span class="tag-option" data-tag="Geografia">Geografia</span>
+                </div>
+              </div>
+              <div class="form-row-2">
+                <div class="form-group"><label>Nível</label>
+                  <select id="proj-level" class="form-select">
+                    <option>Iniciante</option><option>Intermediário</option><option>Avançado</option>
+                  </select>
+                </div>
+                <div class="form-group"><label>Ideia principal</label><input type="text" id="proj-idea" placeholder="Resumo em uma frase"></div>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button class="btn-outline" id="cancel-new-project">Cancelar</button>
+              <button class="btn-primary" id="confirm-new-project">Criar Projeto (+50 XP)</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── CHAT IA ── -->
+        <section class="page hidden" id="page-chat" data-page="chat">
+          <div class="chat-layout">
+            <div class="chat-history-panel">
+              <div class="chat-history-header">
+                <img src="logo.jpeg" alt="Hypatia" class="chat-logo">
+                <span>Hypatia IA</span>
+              </div>
+              <button class="btn-new-chat" id="btn-new-chat">+ Nova conversa</button>
+              <div class="chat-history-list">
+                <div class="chat-history-item active">
+                  <span class="chi-icon">💬</span>
+                  <span class="chi-title">Dúvida em Frações</span>
+                </div>
+                <div class="chat-history-item">
+                  <span class="chi-icon">💬</span>
+                  <span class="chi-title">Resumo de Revolução Francesa</span>
+                </div>
+                <div class="chat-history-item">
+                  <span class="chi-icon">💬</span>
+                  <span class="chi-title">Dicas para Redação ENEM</span>
+                </div>
+                <div class="chat-history-item">
+                  <span class="chi-icon">💬</span>
+                  <span class="chi-title">Como organizar meus estudos</span>
+                </div>
+                <div class="chat-history-item">
+                  <span class="chi-icon">💬</span>
+                  <span class="chi-title">Projeto para neurodivergentes</span>
+                </div>
+              </div>
+            </div>
+            <div class="chat-main">
+              <div class="chat-messages" id="chat-messages">
+                <div class="chat-message ai-message">
+                  <div class="message-avatar"><img src="logo.jpeg" alt="Hypatia"></div>
+                  <div class="message-bubble">
+                    <p data-i18n="chat_welcome_msg">Olá! Sou a Hypatia, sua mentora de estudos. Como posso te ajudar hoje? Pode me perguntar sobre matérias, organização, projetos ou qualquer dúvida escolar. 🚀</p>
+                    <span class="message-time">Agora</span>
+                  </div>
+                </div>
+              </div>
+              <div class="chat-input-area">
+                <div class="chat-input-wrapper">
+                  <input type="text" class="chat-input" id="chat-input" placeholder="Pergunte algo para a Hypatia...">
+                  <button class="btn-send" id="btn-send">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+                  </button>
+                </div>
+                <p class="chat-disclaimer" data-i18n="chat_disclaimer">Hypatia pode cometer erros. Verifique informações importantes.</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ── HACKATHONS ── -->
+        <section class="page hidden" id="page-hackathons" data-page="hackathons">
+          <div class="page-header-inner">
+            <div>
+              <h2 data-i18n="nav_hackathons">Hackathons</h2>
+              <p>Desafios acadêmicos e escolares recomendados para você.</p>
+            </div>
+          </div>
+          <div class="hackathons-grid" id="hackathons-grid">
+            <!-- Rendered by JS -->
+          </div>
+        </section>
+
+        <!-- ── COMUNIDADE ── -->
+        <section class="page hidden" id="page-community" data-page="community">
+          <div class="community-layout">
+            <div class="feed-column">
+              <div class="feed-post">
+                <div class="post-header">
+                  <div class="post-avatar">AS</div>
+                  <div class="post-user-info">
+                    <span class="post-user-name">Ana Silva</span>
+                    <span class="post-meta">há 2 horas • Dicas de Estudo</span>
+                  </div>
+                </div>
+                <div class="post-content">
+                  <p>Pessoal, acabei de terminar um resumo incrível sobre Estequiometria! Quem quiser o PDF, me avisa nos comentários. 📚🧪</p>
+                </div>
+                <div class="post-actions">
+                  <button class="post-action">👍 Curtir</button>
+                  <button class="post-action">💬 Comentar</button>
+                  <button class="post-action">🔗 Compartilhar</button>
+                </div>
+              </div>
+              <div class="feed-post">
+                <div class="post-header">
+                  <div class="post-avatar">LC</div>
+                  <div class="post-user-info">
+                    <span class="post-user-name">Lucas Costa</span>
+                    <span class="post-meta">há 5 horas • Projetos</span>
+                  </div>
+                </div>
+                <div class="post-content">
+                  <p>Meu projeto de "Sistema de Monitoramento Ambiental" está ganhando forma! A Hypatia me ajudou muito com a lógica matemática dos sensores. 🌍🤖</p>
+                </div>
+                <div class="post-actions">
+                  <button class="post-action">👍 Curtir</button>
+                  <button class="post-action">💬 Comentar</button>
+                  <button class="post-action">🔗 Compartilhar</button>
+                </div>
+              </div>
+            </div>
+            <div class="sidebar-column">
+              <div class="comm-sidebar-card">
+                <h3 class="csc-title" data-i18n="comm_ranking">Ranking Global</h3>
+                <div class="ranking-list">
+                  <div class="ranking-item"><span class="rank-num">1</span><div class="rank-avatar"></div><span class="rank-name">Mariana Lima</span><span class="rank-xp">4500 XP</span></div>
+                  <div class="ranking-item"><span class="rank-num">2</span><div class="rank-avatar"></div><span class="rank-name">João Pedro</span><span class="rank-xp">4200 XP</span></div>
+                  <div class="ranking-item"><span class="rank-num">3</span><div class="rank-avatar"></div><span class="rank-name">Beatriz Souza</span><span class="rank-xp">3900 XP</span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ── SETTINGS ── -->
+        <section class="page hidden" id="page-settings" data-page="settings">
+          <div class="settings-container">
+            <div class="settings-section">
+              <h3 data-i18n="settings_profile">Perfil</h3>
+              <div class="settings-row">
+                <div class="settings-info">
+                  <h4 data-i18n="onboarding_name">Seu nome</h4>
+                  <p id="settings-user-name">Usuário</p>
+                </div>
+                <button class="btn-course" data-i18n="btn_manage">Gerenciar</button>
+              </div>
+            </div>
+            <div class="settings-section">
+              <h3 data-i18n="settings_preferences">Preferências</h3>
+              <div class="settings-row">
+                <div class="settings-info">
+                  <h4 data-i18n="settings_theme">Tema</h4>
+                  <p data-i18n="settings_theme_desc">Claro ou escuro</p>
+                </div>
+                <!-- Theme toggle is already in header, but could be here too -->
+              </div>
+              <div class="settings-row">
+                <div class="settings-info">
+                  <h4 data-i18n="settings_lang">Idioma</h4>
+                  <p data-i18n="settings_lang_desc">Português ou Inglês</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ── SUPORTE ── -->
+        <section class="page hidden" id="page-support" data-page="support">
+          <div class="settings-container">
+            <div class="settings-section">
+              <h3 data-i18n="nav_support">Suporte</h3>
+              <p data-i18n="support_subtitle">Estamos aqui para ajudar. Descreva sua dúvida ou problema.</p>
+              <div class="form-group" style="margin-top: 24px;">
+                <label data-i18n="support_subject">Assunto</label>
+                <input type="text" placeholder="Ex: Problema com XP">
+              </div>
+              <div class="form-group">
+                <label data-i18n="support_message">Mensagem</label>
+                <textarea rows="4" placeholder="Como podemos ajudar?"></textarea>
+              </div>
+              <button class="btn-primary" data-i18n="btn_send_support">Enviar mensagem</button>
+            </div>
+          </div>
+        </section>
+
+      </main>
+    </div>
+
+    <!-- ===== BOTTOM NAV (Mobile) ===== -->
+    <nav class="bottom-nav" role="navigation" aria-label="Navegação mobile">
+      <button class="bottom-nav-item active" data-page="dashboard"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"></rect><rect x="14" y="3" width="7" height="7" rx="1"></rect><rect x="3" y="14" width="7" height="7" rx="1"></rect><rect x="14" y="14" width="7" height="7" rx="1"></rect></svg><span data-i18n="nav_dashboard">Dashboard</span></button>
+      <button class="bottom-nav-item" data-page="learn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"></path><path d="M2 17l10 5 10-5"></path><path d="M2 12l10 5 10-5"></path></svg><span data-i18n="nav_learn">Aprender</span></button>
+      <button class="bottom-nav-item bottom-nav-chat" data-page="chat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"></path></svg><span data-i18n="nav_chat">Chat IA</span></button>
+      <button class="bottom-nav-item" data-page="projects"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2h5l2 3h9a2 2 0 012 2z"></path></svg><span data-i18n="nav_projects">Projetos</span></button>
+      <button class="bottom-nav-item" data-page="hackathons"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg><span>Hacks</span></button>
+    </nav>
+
+  </div><!-- end #app -->
+
+  <script src="script.js"></script>
+
+</body>
+</html>
